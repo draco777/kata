@@ -8,8 +8,6 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-
-	romans "github.com/summed/goromans"
 )
 
 func main() {
@@ -35,11 +33,11 @@ func main() {
 		panic("математическая операция некоректная")
 	}
 
-	if romans.IsRomanNumerals(words[0]) && romans.IsRomanNumerals(words[2]) {
+	if IsRomanNumerals(words[0]) && IsRomanNumerals(words[2]) {
 		isRomans = true
-		i, _ := romans.RtoA(words[0])
+		i := RtoA(words[0])
 		a = int(i)
-		i, _ = romans.RtoA(words[2])
+		i = RtoA(words[2])
 		b = int(i)
 
 	} else {
@@ -75,9 +73,63 @@ func main() {
 		if c <= 0 {
 			panic("Не может быть отрицательные числа и ноль")
 		}
-		fmt.Println("Ответ: ", romans.AtoR(uint(c)))
+		fmt.Println("Ответ: ", AtoR(c))
 
 	} else {
 		fmt.Println("Ответ: ", c)
 	}
+}
+
+// Процедуры работы с римскими цыфрами
+
+var romans = map[string]int{
+	"I":    1,
+	"II":   2,
+	"III":  3,
+	"IV":   4,
+	"V":    5,
+	"VI":   6,
+	"VII":  7,
+	"VIII": 8,
+	"IX":   9,
+	"X":    10,
+}
+
+func IsRomanNumerals(in string) bool {
+	_, found := romans[in]
+
+	return found
+}
+
+func AtoR(in int) string {
+
+	conversions := []struct {
+		value int
+		digit string
+	}{
+		{100, "C"},
+		{90, "XC"},
+		{50, "L"},
+		{40, "XL"},
+		{10, "X"},
+		{9, "IX"},
+		{5, "V"},
+		{4, "IV"},
+		{1, "I"},
+	}
+
+	var roman strings.Builder
+	for _, conversion := range conversions {
+		for in >= conversion.value {
+			roman.WriteString(conversion.digit)
+			in -= conversion.value
+		}
+	}
+
+	return roman.String()
+}
+
+func RtoA(in string) int {
+	rez, _ := romans[in]
+	return rez
 }
