@@ -17,7 +17,7 @@ func main() {
 	isRomans := false
 
 	line, _ := in.ReadString('\n')
-	line = strings.TrimRight(line, "\n")
+	line = strings.TrimRight(line, "\r\n")
 
 	words := strings.Split(line, " ")
 
